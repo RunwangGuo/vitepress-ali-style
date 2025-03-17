@@ -1,33 +1,24 @@
-name: CI Github Pages
+name: GitHub Actions Build and Deploy Demo        # 大标题
 on:
-  #监听push操作
   push:
     branches:
-      - main # 这里只配置了main分支，所以只有推送main分支才会触发以下任务
-# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages
+      - main                                   # 监听哪个分支的哪个动作
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write                                # 设置权限，可写，也可以不用配置，v4版本新增的
 jobs:
-  # 任务ID
-  build-and-deploy:
-    # 运行环境
-    runs-on: ubuntu-latest
-    # 步骤
+  build-and-deploy:                              # 其中一个任务的名称，ID
+    runs-on: ubuntu-latest                       # 这个任务运行所需的环境
     steps:
-      # 官方action，将代码拉取到虚拟机
-      - name: Checkout  ️
-        uses: actions/checkout@v3
+      - name: Checkout 🛎️                        # 第一步：获取源码
+        uses: actions/checkout@v3                # 使用的工具
 
-      - name: Install and Build   # 安装依赖、打包，如果提前已打包好无需这一步
+      - name: Install and Build 🔧               # 第二步：下载依赖和构建
         run: |
           npm install
           npm run docs:build
 
-      - name: Deploy   # 部署
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+      - name: Deploy 🚀                         # 第三步：部署
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages # 部署后提交到那个分支
-          folder: docs/.vitepress/dist # 这里填打包好的目录名称
-
+          folder: docs/.vitepress/dist                        # 部署的目录
+          branch: gh-pages                     # 部署到哪个分支
